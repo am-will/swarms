@@ -103,8 +103,26 @@ cp -r skills/context7 ~/.codex/skills/
 
 ### Planning
 
+The swarm-planner skill works best when used in Code Mode. Alternatively, you can just run the skill outside of Plan Mode as well, it will still work.
+
+**Codex instructions:**
+
 ```
-/swarm-planner
+1. Switch to Plan Mode
+2. Provide the prompt of the product/feature you want to build and call the $swarm-planner skill in the prompt
+3. Answer any questions it asks during the planning
+4. At the end of the plan, when it asks you if you want to implement this plan, press Esc
+5. Switch out of Plan Mode by pressing SHIFT+TAB
+6. Continue on to Execution phase
+```
+
+**Claude Code instructions:**
+
+```
+1. You don't need to switch to plan mode. You can just run the skill with your prompt.
+2. /swarm-planner
+3. Answer any questions it asks during planning
+4. Continue on to Execution phase
 ```
 
 The planner will:
