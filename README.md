@@ -31,12 +31,15 @@ The critical addition: **explicit task dependencies**. Every task declares what 
 **Note For Codex Users:** This skill was designed to be ran within "Plan Mode" in Codex. It is not a requirement, but it will work better due to the new tool request_user_input, which ONLY works inside of plan mode. In the future, I believe they will allow this tool to be used in Code mode. Alternatively, you can just run the skill outside of Plan Mode as well, it will still work. 
 
 **Codex instructions:**
-- Switch to Plan Mode
-- Provide the prompt of the product/feature you want to build and call the $swarm-planner skill in the prompt
-- Answer any questions it asks during the planning
-- At the end of the plan, when it asks you if you want to implement this plan, press Esc
-- Switch out of Plan mode by pressing SHIFT+TAB
-- Continue on to Execution phase
+
+```
+1. Switch to Plan Mode
+2. Provide the prompt of the product/feature you want to build and call the $swarm-planner skill in the prompt
+3. Answer any questions it asks during the planning
+4. At the end of the plan, when it asks you if you want to implement this plan, press Esc
+5. Switch out of Plan mode by pressing SHIFT+TAB
+6. Continue on to Execution phase
+```
 
 **Claude Users:** You don't need to switch to plan mode. You can just run the skill with your prompt.
 
