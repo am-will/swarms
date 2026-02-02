@@ -28,24 +28,6 @@ The planner researches your codebase, fetches current library docs via Context7,
 
 The critical addition: **explicit task dependencies**. Every task declares what it depends on, enabling the orchestrator to know exactly which tasks can run in parallel at any moment.
 
-**Note For Codex Users:** This skill was designed to be ran within "Plan Mode" in Codex. It is not a requirement, but it will work better due to the new tool request_user_input, which ONLY works inside of plan mode. In the future, I believe they will allow this tool to be used in Code mode. Alternatively, you can just run the skill outside of Plan Mode as well, it will still work. 
-
-**Codex instructions:**
-
-```
-1. Switch to Plan Mode
-2. Provide the prompt of the product/feature you want to build and call the $swarm-planner skill in the prompt
-3. Answer any questions it asks during the planning
-4. At the end of the plan, when it asks you if you want to implement this plan, press Esc
-5. Switch out of Plan mode by pressing SHIFT+TAB
-6. Continue on to Execution phase
-```
-
-**Claude or Other Agent Users:** 
-```
-You don't need to switch to plan mode. You can just run the skill with your prompt.
-```
-
 **Phase 2: Execution** (`/parallel-task`)
 
 The orchestrator (same session that planned) parses unblocked tasks and launches subagents in parallel. Because it planned the work, it can provide each subagent with:
@@ -109,15 +91,20 @@ cp -r skills/context7 ~/.codex/skills/
 
 ## Usage
 
+I strongly recommend you download the Context7 Skill, or use their MCP server. To use the Context7 skill, you must add your Context7 API key to .env file in the /context7/ skill folder. There is an .env.example file you can edit.
+
 ### Planning
 
-The swarm-planner skill works best when used in Code Mode. Alternatively, you can just run the skill outside of Plan Mode as well, it will still work.
+**For Codex Users:**
+The swarm-planner skill works best when used in PLAN Mode. If you don't have plan mode enabled, it will still work, but this allows you to take advantage of Codex's new Request User Input tool, which is currently only available in Plan Mode. 
+
+Note: Collaboration_modes default to Codex 5.2 High, so if you're on a Plus account, you might consider turning it off for the implementation phase.
 
 **Codex instructions:**
 
 ```
 1. Switch to Plan Mode
-2. Provide the prompt of the product/feature you want to build and call the $swarm-planner skill in the prompt
+2. Provide the prompt of the product/feature you want to build and call the $swarm-planner skill directly in the prompt
 3. Answer any questions it asks during the planning
 4. At the end of the plan, when it asks you if you want to implement this plan, press Esc
 5. Switch out of Plan Mode by pressing SHIFT+TAB
@@ -143,9 +130,10 @@ The planner will:
 
 ### Execution
 
+To run the swarms, simply say implement the @plan.md with the $parallel-task skill.
+
 ```
-/parallel-task auth-plan.md           # Run full plan
-/parallel-task auth-plan.md T1 T2 T4  # Run specific tasks only
+Prompt: Run the plan with the parallel task skill
 ```
 
 ## Dependency Format
@@ -190,9 +178,12 @@ The `status`, `log`, and `files` fields are updated by subagents as work complet
 ## Example Session
 
 ```
-User: Add authentication to my Express app
+> User: Add authentication to my Express app using the swarm-planner skill.
+-or-
+> /swarm-planner add authentication to my express app.
+-or-
+> Use swarm planner skill to help me build a b2b website to sell AI agents
 
-> /swarm-planner
 
 [researches codebase, fetches Express/Passport/JWT docs]
 [asks: "JWT or session-based? Where should tokens be stored?"]
@@ -203,7 +194,9 @@ User: Add authentication to my Express app
 User: looks good, execute it
 
 > /parallel-task auth-plan.md
-
+-or-
+> execute the plan using parallel task skill
+ 
 Wave 1: Launching T1 (user schema), T2 (install packages) in parallel...
   T1 complete - committed, plan updated
   T2 complete - committed, plan updated
