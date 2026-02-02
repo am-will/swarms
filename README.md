@@ -18,7 +18,7 @@ There's no continuity. No one checking work. No context passed between agents. E
 
 Swarms takes lessons from simple loops and more complex multi-agent systems, packaging them into something effective and beginner-friendly.
 
-The key insight: **an orchestrator that plans the work should also coordinate the execution**. It already has the complete picture—codebase research, documentation, clarified requirements, a reviewed plan. Why throw that away?
+The key insight: **an orchestrator that plans the work should also coordinate the execution**. It already has the complete picture: codebase research, documentation, clarified requirements, a reviewed plan. Why throw that away?
 
 ### How It Works
 
@@ -52,19 +52,19 @@ This dramatically reduces the tokens each subagent spends on discovery. Instead 
 
 When subagents complete, they:
 1. Run validation/tests if feasible
-2. Commit their work (never push—other agents are working in parallel)
+2. Commit their work (never push: other agents are working in parallel)
 3. Update the plan with status, work log, and files modified
 4. Return a summary to the orchestrator
 
-The orchestrator then **verifies the work** before moving to the next wave. If something went wrong, it catches and fixes it immediately—not three tasks later when everything is tangled.
+The orchestrator then **verifies the work** before moving to the next wave. If something went wrong, it catches and fixes it immediately, not three tasks later when everything is tangled.
 
 This continues wave by wave until all tasks are complete.
 
 ## Why Not Just Use Ralph Loops or Gas Town?
 
-**vs. Ralph Loops**: The orchestrator maintains context across the entire project. It checks work, provides upfront context to subagents, and catches issues between waves. Simple loops have no oversight—each agent checks its own work and hopes for the best.
+**vs. Ralph Loops**: The orchestrator maintains context across the entire project. It checks work, provides upfront context to subagents, and catches issues between waves. Simple loops have no oversight. Each agent checks its own work and hopes for the best.
 
-**vs. Complex Multi-Agent Systems**: Systems like Gas Town use families of specialized agents (context managers, commit handlers, conflict resolvers, etc.) working independently. Powerful, but complex and token-hungry. Swarms trades some parallelism for simplicity—waves execute sequentially, but within each wave, tasks run in parallel. No scripts, no complex setup, no conflict resolution needed because dependencies are explicit.
+**vs. Complex Multi-Agent Systems**: Systems like Gas Town use families of specialized agents (context managers, commit handlers, conflict resolvers, etc.) working independently. Powerful, but complex and token-hungry. Swarms trades some parallelism for simplicity. Waves execute sequentially, but within each wave, tasks run in parallel. No scripts, no complex setup, no conflict resolution needed because dependencies are explicit.
 
 **The tradeoff**: Time. Swarms works in phases. A more complex system might have dozens of agents working simultaneously. But you'll spend fewer tokens, encounter fewer conflicts, and can actually understand what's happening.
 
