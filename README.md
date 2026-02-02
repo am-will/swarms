@@ -103,8 +103,6 @@ I strongly recommend you download the Context7 Skill, or use their MCP server. T
 **For Codex Users:**
 The swarm-planner skill works best when used in PLAN Mode. If you don't have plan mode enabled, it will still work, but this allows you to take advantage of Codex's new Request User Input tool, which is currently only available in Plan Mode. 
 
-Note: Collaboration_modes default to Codex 5.2 High, so if you're on a Plus account, you might consider turning it off for the implementation phase.
-
 **Codex instructions:**
 
 ```
