@@ -1,20 +1,118 @@
 # Swarms
 
-Multi-agent orchestration skills for Claude Code and Codex. Plan tasks with explicit dependencies, then execute them in parallel across multiple AI agents.
+Multi-agent orchestration for Claude Code and Codex. Plan with explicit dependencies, execute in parallel waves, with an orchestrator that maintains context and verifies work.
+
+## The Problem with Simple Loops
+
+A popular pattern for AI coding agents is the bash loop: spawn an agent, have it find the next task, execute it, repeat. It mirrors how humans work—logical and straightforward.
+
+But LLMs aren't humans. Each new agent session starts fresh. It has to:
+- Re-read the same prompt as every previous iteration
+- Discover the current project state through exploration
+- Figure out what comes next by inspecting previous work
+- Hope the last agent didn't cut corners
+
+There's no continuity. No one checking work. No context passed between agents. Each iteration burns tokens re-discovering what the orchestrator already knows.
+
+## A Different Approach
+
+Swarms takes lessons from simple loops and more complex multi-agent systems, packaging them into something effective and beginner-friendly.
+
+The key insight: **an orchestrator that plans the work should also coordinate the execution**. It already has the complete picture—codebase research, documentation, clarified requirements, a reviewed plan. Why throw that away?
+
+### How It Works
+
+**Phase 1: Planning** (`/swarm-planner`)
+
+The planner researches your codebase, fetches current library docs via Context7, asks clarifying questions when it detects ambiguity, and produces a dependency-aware plan. Before finishing, it spawns a subagent to review the plan for gaps.
+
+The critical addition: **explicit task dependencies**. Every task declares what it depends on, enabling the orchestrator to know exactly which tasks can run in parallel at any moment.
+
+**Phase 2: Execution** (`/parallel-task`)
+
+The orchestrator (same session that planned) parses unblocked tasks and launches subagents in parallel. Because it planned the work, it can provide each subagent with:
+- Exactly which files to work on
+- Relevant context from the plan
+- What adjacent tasks are doing
+- Current project state with detailed logs
+
+This dramatically reduces the tokens each subagent spends on discovery. Instead of grepping, searching, and exploring, they know exactly where to go and what to build.
+
+When subagents complete, they:
+1. Run validation/tests if feasible
+2. Commit their work (never push—other agents are working in parallel)
+3. Update the plan with status, work log, and files modified
+4. Return a summary to the orchestrator
+
+The orchestrator then **verifies the work** before moving to the next wave. If something went wrong, it catches and fixes it immediately—not three tasks later when everything is tangled.
+
+This continues wave by wave until all tasks are complete.
+
+## Why Not Just Use [Other System]?
+
+**vs. Simple Loops**: The orchestrator maintains context across the entire project. It checks work, provides upfront context to subagents, and catches issues between waves. Simple loops have no oversight—each agent checks its own work and hopes for the best.
+
+**vs. Complex Multi-Agent Systems**: Systems like Gas Town use families of specialized agents (context managers, commit handlers, conflict resolvers, etc.) working independently. Powerful, but complex and token-hungry. Swarms trades some parallelism for simplicity—waves execute sequentially, but within each wave, tasks run in parallel. No scripts, no complex setup, no conflict resolution needed because dependencies are explicit.
+
+**The tradeoff**: Time. Swarms works in phases. A more complex system might have dozens of agents working simultaneously. But you'll spend fewer tokens, encounter fewer conflicts, and can actually understand what's happening.
 
 ## Skills
 
 | Skill | Description |
 |-------|-------------|
-| [swarm-planner](./skills/swarm-planner/) | Creates dependency-aware implementation plans optimized for parallel execution |
-| [parallel-task](./skills/parallel-task/) | Executes plans by launching subagents in dependency-ordered waves |
+| [swarm-planner](./skills/swarm-planner/) | Dependency-aware planning with codebase research, doc fetching, and subagent review |
+| [parallel-task](./skills/parallel-task/) | Wave-based execution with context handoff and work verification |
 | [context7](./skills/context7/) | Fetches up-to-date library documentation via Context7 API |
 
-## How It Works
+## Installation
 
-### 1. Plan with Dependencies
+### Claude Code
 
-`/swarm-planner` creates plans where each task declares what it depends on:
+```bash
+cp -r skills/swarm-planner ~/.claude/skills/
+cp -r skills/parallel-task ~/.claude/skills/
+cp -r skills/context7 ~/.claude/skills/
+
+# Or via codexskills CLI
+npx @am-will/codexskills --user am-will/swarms/skills/swarm-planner
+npx @am-will/codexskills --user am-will/swarms/skills/parallel-task
+npx @am-will/codexskills --user am-will/swarms/skills/context7
+```
+
+### Codex
+
+```bash
+cp -r skills/swarm-planner ~/.codex/skills/
+cp -r skills/parallel-task ~/.codex/skills/
+cp -r skills/context7 ~/.codex/skills/
+```
+
+## Usage
+
+### Planning
+
+```
+/swarm-planner
+```
+
+The planner will:
+1. Research your codebase architecture
+2. Fetch current docs for libraries via Context7
+3. Ask clarifying questions (with recommendations) when ambiguity exists
+4. Generate a plan with explicit task dependencies
+5. Spawn a subagent to review for gaps
+6. Save to `<topic>-plan.md`
+
+### Execution
+
+```
+/parallel-task auth-plan.md           # Run full plan
+/parallel-task auth-plan.md T1 T2 T4  # Run specific tasks only
+```
+
+## Dependency Format
+
+Tasks declare dependencies explicitly:
 
 ```
 T1: [depends_on: []] Create database schema
@@ -25,112 +123,60 @@ T5: [depends_on: [T3, T4]] Implement business logic
 T6: [depends_on: [T2, T5]] Add API endpoints
 ```
 
-Tasks with empty or satisfied dependencies can run in parallel.
-
-### 2. Execute in Waves
-
-`/parallel-task` reads the plan and launches agents in waves:
+This produces execution waves:
 
 | Wave | Tasks | Runs When |
 |------|-------|-----------|
-| 1 | T1, T2 | Immediately (no dependencies) |
-| 2 | T3, T4 | After T1 completes |
-| 3 | T5 | After T3 and T4 complete |
-| 4 | T6 | After T2 and T5 complete |
+| 1 | T1, T2 | Immediately |
+| 2 | T3, T4 | After T1 |
+| 3 | T5 | After T3, T4 |
+| 4 | T6 | After T2, T5 |
 
-Each wave runs all unblocked tasks in parallel, maximizing throughput while respecting dependencies.
+## Plan Structure
 
-## Installation
-
-### Claude Code
-
-```bash
-# Install both skills
-cp -r skills/swarm-planner ~/.claude/skills/
-cp -r skills/parallel-task ~/.claude/skills/
-
-# Or via codexskills CLI
-npx @am-will/codexskills --user am-will/swarms/skills/swarm-planner
-npx @am-will/codexskills --user am-will/swarms/skills/parallel-task
-```
-
-### Codex
-
-```bash
-cp -r skills/swarm-planner ~/.codex/skills/
-cp -r skills/parallel-task ~/.codex/skills/
-```
-
-## Usage
-
-### Planning
-
-```
-/swarm-planner
-
-# The planner will:
-# 1. Research your codebase
-# 2. Fetch docs for any libraries (via Context7)
-# 3. Ask clarifying questions
-# 4. Generate a dependency-aware plan
-# 5. Have a subagent review for gaps
-# 6. Save to <topic>-plan.md
-```
-
-### Execution
-
-```
-/parallel-task auth-plan.md           # Run full plan
-/parallel-task auth-plan.md T1 T2 T4  # Run specific tasks
-```
-
-## Plan Format
-
-Plans use this structure for each task:
+Each task in the plan includes:
 
 ```markdown
 ### T1: Create User Model
 - **depends_on**: []
 - **location**: src/models/user.ts
-- **description**: Define User entity with fields...
+- **description**: Define User entity with required fields
 - **validation**: Unit tests pass
 - **status**: Not Completed
-- **log**: [filled by executor]
-- **files edited/created**: [filled by executor]
+- **log**: [updated by subagent on completion]
+- **files edited/created**: [updated by subagent on completion]
 ```
 
-The executor updates `status`, `log`, and `files` as work completes.
+The `status`, `log`, and `files` fields are updated by subagents as work completes, giving the orchestrator (and you) visibility into progress.
 
-## Workflow Example
+## Example Session
 
 ```
 User: Add authentication to my Express app
 
 > /swarm-planner
 
-Planner: [researches codebase, fetches Express/JWT docs]
-         [asks: "OAuth or JWT? Session storage preference?"]
-         [generates auth-plan.md with 8 tasks]
+[researches codebase, fetches Express/Passport/JWT docs]
+[asks: "JWT or session-based? Where should tokens be stored?"]
+[generates auth-plan.md with 8 dependency-ordered tasks]
+[subagent reviews plan, suggests adding rate limiting task]
+[updates plan, saves]
 
-User: looks good, run it
+User: looks good, execute it
 
 > /parallel-task auth-plan.md
 
-Executor: Wave 1 - Launching T1 (schema), T2 (packages) in parallel...
-          Wave 1 complete. Wave 2 - Launching T3, T4, T5 in parallel...
-          [continues until all tasks complete]
+Wave 1: Launching T1 (user schema), T2 (install packages) in parallel...
+  T1 complete - committed, plan updated
+  T2 complete - committed, plan updated
+  Verifying wave 1... OK
 
-Summary: 8/8 tasks completed. Files modified: [list]
+Wave 2: Launching T3 (auth service), T4 (middleware) in parallel...
+  [continues until all tasks complete]
+
+Summary: 8/8 tasks completed
+Files modified: src/models/user.ts, src/middleware/auth.ts, ...
 ```
-
-## Key Features
-
-- **Explicit dependencies** - No implicit ordering; parallelization is maximized
-- **Atomic tasks** - Each task is independently executable
-- **Progress tracking** - Plans update with logs as work completes
-- **Validation** - Each task includes acceptance criteria
-- **Review step** - Subagent reviews plans before execution
-- **Wave-based execution** - Respects dependencies while maximizing parallelism
 
 ## License
 
