@@ -26,6 +26,9 @@ The key insight: **an orchestrator that plans the work should also coordinate th
 
 **Phase 1: Planning** (`/swarm-planner`)
 
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/27fc3022-bf7e-41b8-a805-0e3092d99fcf" />
+
+
 The planner researches your codebase, fetches current library docs via Context7, asks clarifying questions when it detects ambiguity, and produces a dependency-aware plan. Before finishing, it spawns a subagent to review the plan for gaps.
 
 The critical addition: **explicit task dependencies**. Every task declares what it depends on, enabling the orchestrator to know exactly which tasks can run in parallel at any moment.
