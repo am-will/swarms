@@ -1,3 +1,5 @@
+<img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/778c9168-b39a-4b2f-8a4c-1e06ee00d98c" />
+
 # Swarms
 
 Multi-agent orchestration for Claude Code and Codex. Plan with explicit dependencies, execute in parallel waves, with an orchestrator that maintains context and verifies work.
