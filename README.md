@@ -132,6 +132,8 @@ The planner will:
 5. Spawn a subagent to review for gaps
 6. Save to `<topic>-plan.md`
 
+**NOTE: Codex in Plan Mode cannot save the plan to a file. Esc out, switch to Code Mode, and ask it to save the file to your repo. Proceed to execution**
+
 ### Execution
 
 To run the swarms, simply say implement the @plan.md with the $parallel-task skill.
