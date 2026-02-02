@@ -8,6 +8,7 @@ Multi-agent orchestration skills for Claude Code and Codex. Plan tasks with expl
 |-------|-------------|
 | [swarm-planner](./skills/swarm-planner/) | Creates dependency-aware implementation plans optimized for parallel execution |
 | [parallel-task](./skills/parallel-task/) | Executes plans by launching subagents in dependency-ordered waves |
+| [context7](./skills/context7/) | Fetches up-to-date library documentation via Context7 API |
 
 ## How It Works
 
