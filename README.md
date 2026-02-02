@@ -4,7 +4,7 @@ Multi-agent orchestration for Claude Code and Codex. Plan with explicit dependen
 
 ## The Problem with Simple Loops
 
-A popular pattern for AI coding agents is the bash loop: spawn an agent, have it find the next task, execute it, repeat. It mirrors how humans work—logical and straightforward.
+A popular pattern for AI coding agents is the bash loop: spawn an agent, have it find the next task, execute it, repeat. It mirrors how humans work, logical and straightforward.
 
 But LLMs aren't humans. Each new agent session starts fresh. It has to:
 - Re-read the same prompt as every previous iteration
