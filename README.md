@@ -111,7 +111,8 @@ The swarm-planner skill works best when used in PLAN Mode. If you don't have pla
 3. Answer any questions it asks during the planning
 4. At the end of the plan, when it asks you if you want to implement this plan, press Esc
 5. Switch out of Plan Mode by pressing SHIFT+TAB
-6. Continue on to Execution phase
+6. SAVE THE PLAN to your repo. [feature/product]-plan.md
+7. Continue on to Execution phase
 ```
 
 **Claude Code instructions:**
