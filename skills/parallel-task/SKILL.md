@@ -111,6 +111,7 @@ After subagents complete their work:
 ## Example Usage
 
 ```
+'Implement the plan using parallel task skill'
 /parallel-task plan.md
 /parallel-task ./plans/auth-plan.md T1 T2 T4
 /parallel-task user-profile-plan.md --tasks T3 T7
