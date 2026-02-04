@@ -89,6 +89,17 @@ npx skills add am-will/swarms --skill parallel-task -g -a codex -y
 npx skills add am-will/swarms --skill context7 -g -a codex -y
 ```
 
+**Required: Enable Subagents**
+
+Swarms uses subagents to execute tasks in parallel. Codex CLI users must enable this experimental feature by adding the following to your `~/.codex/config.toml`:
+
+```toml
+[features]
+collab = true
+```
+
+Without this setting, the parallel-task skill will not be able to spawn subagents.
+
 ## Usage
 
 I strongly recommend you download the Context7 Skill, or use their MCP server. To use the Context7 skill, you must add your Context7 API key to .env file in the /context7/ skill folder. There is an .env.example file you can edit.
