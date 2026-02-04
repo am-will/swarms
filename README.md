@@ -76,22 +76,17 @@ This continues wave by wave until all tasks are complete.
 ### Claude Code
 
 ```bash
-cp -r skills/swarm-planner ~/.claude/skills/
-cp -r skills/parallel-task ~/.claude/skills/
-cp -r skills/context7 ~/.claude/skills/
-
-# Or via codexskills CLI
-npx @am-will/codexskills --user am-will/swarms/skills/swarm-planner
-npx @am-will/codexskills --user am-will/swarms/skills/parallel-task
-npx @am-will/codexskills --user am-will/swarms/skills/context7
+npx skills add am-will/swarms --skill swarm-planner -g -a claude-code -y
+npx skills add am-will/swarms --skill parallel-task -g -a claude-code -y
+npx skills add am-will/swarms --skill context7 -g -a claude-code -y
 ```
 
 ### Codex
 
 ```bash
-cp -r skills/swarm-planner ~/.codex/skills/
-cp -r skills/parallel-task ~/.codex/skills/
-cp -r skills/context7 ~/.codex/skills/
+npx skills add am-will/swarms --skill swarm-planner -g -a codex -y
+npx skills add am-will/swarms --skill parallel-task -g -a codex -y
+npx skills add am-will/swarms --skill context7 -g -a codex -y
 ```
 
 ## Usage
