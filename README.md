@@ -134,7 +134,7 @@ The swarm-planner skill works best when used in PLAN Mode. If you don't have pla
 1. You don't need to switch to plan mode. You can just run the skill with your prompt.
 2. /swarm-planner
 3. Answer any questions it asks during planning
-4. Continue on to Execution phase
+4. Continue on to Execution phase by calling /parallel-task skill
 ```
 
 The planner will:
@@ -152,7 +152,7 @@ The planner will:
 To run the swarms, simply say implement the @plan.md with the $parallel-task skill.
 
 ```
-Prompt: Run the plan with the parallel task skill
+Prompt: Run the plan with the $parallel-task skill
 ```
 
 ## Dependency Format
