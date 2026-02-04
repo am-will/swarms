@@ -75,13 +75,13 @@ This continues wave by wave until all tasks are complete.
 ### Claude Code
 
 ```bash
-npx skills add am-will/swarms -g -a claude-code -y
+npx skills add am-will/swarms
 ```
 
 ### Codex
 
 ```bash
-npx skills add am-will/swarms -g -a codex -y
+npx skills add am-will/swarms
 ```
 
 **Required: Enable Subagents**
