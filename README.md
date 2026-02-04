@@ -95,6 +95,20 @@ collab = true
 
 Without this setting, the parallel-task skill will not be able to spawn subagents.
 
+**Recommended: Context7 MCP**
+
+I recommend pairing Swarms with the Context7 MCP server to ensure you're using the latest libraries, APIs, and documentation during planning and implementation.
+
+For Codex, add this to your `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.context7]
+url = "https://mcp.context7.com/mcp"
+http_headers = { "CONTEXT7_API_KEY" = "YOUR_API_KEY" }
+```
+
+For other agents, visit https://context7.com/dashboard for setup instructions.
+
 ## Usage
 
 ### Planning
