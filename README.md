@@ -69,24 +69,19 @@ This continues wave by wave until all tasks are complete.
 |-------|-------------|
 | [swarm-planner](./skills/swarm-planner/) | Dependency-aware planning with codebase research, doc fetching, and subagent review |
 | [parallel-task](./skills/parallel-task/) | Wave-based execution with context handoff and work verification |
-| [context7](./skills/context7/) | Fetches up-to-date library documentation via Context7 API |
 
 ## Installation
 
 ### Claude Code
 
 ```bash
-npx skills add am-will/swarms --skill swarm-planner -g -a claude-code -y
-npx skills add am-will/swarms --skill parallel-task -g -a claude-code -y
-npx skills add am-will/swarms --skill context7 -g -a claude-code -y
+npx skills add am-will/swarms -g -a claude-code -y
 ```
 
 ### Codex
 
 ```bash
-npx skills add am-will/swarms --skill swarm-planner -g -a codex -y
-npx skills add am-will/swarms --skill parallel-task -g -a codex -y
-npx skills add am-will/swarms --skill context7 -g -a codex -y
+npx skills add am-will/swarms -g -a codex -y
 ```
 
 **Required: Enable Subagents**
@@ -101,8 +96,6 @@ collab = true
 Without this setting, the parallel-task skill will not be able to spawn subagents.
 
 ## Usage
-
-I strongly recommend you download the Context7 Skill, or use their MCP server. To use the Context7 skill, you must add your Context7 API key to .env file in the /context7/ skill folder. There is an .env.example file you can edit.
 
 ### Planning
 
